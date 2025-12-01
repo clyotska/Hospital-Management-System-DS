@@ -16,6 +16,8 @@ private:
 public:
     Data(const Patient &p, const std::string &d, const std::string &vc,
          const std::string &doc, const std::string &res);
+    
+    Data();
 
     std::string getDate() const;
     std::string getVisitCause() const;

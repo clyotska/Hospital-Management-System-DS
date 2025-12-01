@@ -5,6 +5,7 @@
 Data::Data(const Patient& p, const std::string& d, const std::string& vc,
            const std::string& doc, const std::string& res)
     : patient(p), date(d), visitCause(vc), doctor(doc), result(res) {}
+Data::Data() : patient(Patient(0,0,"Unknown","Unknown",0)), date("N/A"), visitCause("N/A"), doctor("N/A"), result("N/A") {}
 
 std::string Data::getDate() const { return date; }
 std::string Data::getVisitCause() const { return visitCause; }
