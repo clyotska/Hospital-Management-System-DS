@@ -65,9 +65,22 @@ std::string Patient::getStringArrivalTime() const {
 
 std::string Patient::info() const {
     std::ostringstream oss;
+
+    std::string red = "\033[1;31m";    // Red
+    std::string yellow = "\033[1;33m"; // Yellow
+    std::string green = "\033[1;32m";  // Green
+    std::string reset = "\033[0m";     // Reset to default
+
+    std::string severityColor = green; // Default to Green (1-4)
+    if (severity >= 9) {
+        severityColor = red;           // Critical (9-10)
+    } else if (severity >= 5) {
+        severityColor = yellow;        // Moderate (5-8)
+    }
+
     oss << "Patient ID: " << getPatientId() << "\n"
         << "Name: " << getName() << "\n"
-        << "Severity: " << getSeverity() << "\n"
+        << "Severity: " << severityColor << getSeverity() << reset << "\n"
         << "Department: " << getDepartment() << "\n"
         << "Arrival: " << getStringArrivalTime() << "\n"
         << "Gender: " << getGender() << "  Age: " << getAge() << "\n"

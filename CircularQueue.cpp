@@ -47,13 +47,26 @@ Patient CircularQueue::Dequeue() {
 }
 
 void CircularQueue::Display() const {
+
+    string red = "\033[1;31m";
+    string yellow = "\033[1;33m";
+    string green = "\033[1;32m";
+    string reset = "\033[0m";
+
     if (isEmpty()) {
         cout << "The queue is empty.\n";
         return;
     }
     for (int i = 0; i < size; ++i) {
         int idx = (front + i) % capacity;
-        cout << (i + 1) << ". " << queue[idx].getName() << '\n';
+        int s = queue[idx].getSeverity();
+        string color = green;
+        if (s >= 9) {
+            color = red;
+        } else if (s >= 5) {
+            color = yellow;
+        }
+        cout << (i + 1) << ". " << queue[idx].getName() << " (" << color << s << reset << ")\n";
     }
 }
 
