@@ -111,59 +111,63 @@ void DepartmentBST::display() const {
 string DepartmentBST::getDepartmentName() const { return departmentName; }
 
 // ---------- PriorityBST implementations ----------
-class PriorityBST::Impl {
-public:
-    DepartmentBST* departments[10];
-    int deptCount;
-    Impl() : deptCount(0) {
-        for (int i = 0; i < 10; ++i) departments[i] = nullptr;
-    }
-    ~Impl() {
-        for (int i = 0; i < deptCount; ++i) delete departments[i];
-    }
-    int findDepartment(const string& dept) const {
-        for (int i = 0; i < deptCount; ++i) {
-            if (departments[i]->getDepartmentName() == dept) return i;
-        }
-        return -1;
-    }
-    void addDepartment(const string& dept) {
-        if (deptCount >= 10) { cout << "Maximum departments reached.\n"; return; }
-        if (findDepartment(dept) != -1) { cout << "Department already exists.\n"; return; }
-        departments[deptCount++] = new DepartmentBST(dept);
-    }
-};
 
-PriorityBST::PriorityBST() : pImpl(new Impl()) {}
-PriorityBST::~PriorityBST() { delete pImpl; }
+PriorityBST::PriorityBST() : deptCount(0) {
+    for (int i = 0; i < 10; ++i) departments[i] = nullptr;
+}
+
+PriorityBST::~PriorityBST() {
+    for (int i = 0; i < deptCount; ++i) delete departments[i];
+}
+
+int PriorityBST::findDepartment(const string& dept) const {
+    for (int i = 0; i < deptCount; ++i) {
+        if (departments[i]->getDepartmentName() == dept) return i;
+    }
+    return -1;
+}
+
+void PriorityBST::addDepartment(const string& dept) {
+    if (deptCount >= 10) { cout << "Maximum departments reached.\n"; return; }
+    if (findDepartment(dept) != -1) { return; } // Department already exists, do nothing.
+    departments[deptCount++] = new DepartmentBST(dept);
+}
 
 void PriorityBST::insert(const Patient& p, const string& dept) {
-    int idx = pImpl->findDepartment(dept);
+    int idx = findDepartment(dept);
     if (idx == -1) {
-        pImpl->addDepartment(dept);
-        idx = pImpl->deptCount - 1;
+        // This case should ideally not be hit if departments are pre-initialized in main.
+        // However, as a fallback, we can add it.
+        addDepartment(dept);
+        idx = findDepartment(dept); // a bit inefficient, could be deptCount-1
+        if(idx == -1) {
+            cout << "Failed to add new department " << dept << ". Maximum probably reached.\n";
+            return;
+        }
     }
-    pImpl->departments[idx]->insert(p);
+    departments[idx]->insert(p);
 }
 
 Patient PriorityBST::getNextPatient(const string& dept) {
-    int idx = pImpl->findDepartment(dept);
+    int idx = findDepartment(dept);
     if (idx == -1) throw runtime_error("Department not found.");
-    return pImpl->departments[idx]->getNextPatient();
+    return departments[idx]->getNextPatient();
 }
 
 bool PriorityBST::isEmpty(const string& dept) const {
-    int idx = pImpl->findDepartment(dept);
-    if (idx == -1) return true;
-    return pImpl->departments[idx]->isEmpty();
+    int idx = findDepartment(dept);
+    if (idx == -1) return true; // if dept doesn't exist, it's "empty"
+    return departments[idx]->isEmpty();
 }
 
 void PriorityBST::display(const string& dept) {
-    int idx = pImpl->findDepartment(dept);
+    int idx = findDepartment(dept);
     if (idx == -1) { cout << "Department not found.\n"; return; }
-    pImpl->departments[idx]->display();
+    departments[idx]->display();
 }
 
 void PriorityBST::displayAll() {
-    for (int i = 0; i < pImpl->deptCount; ++i) pImpl->departments[i]->display();
+    cout << "\n\n---\n";
+    for (int i = 0; i < deptCount; ++i) departments[i]->display();
+    cout << "---\n\n";
 }

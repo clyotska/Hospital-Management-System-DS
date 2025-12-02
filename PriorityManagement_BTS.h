@@ -27,14 +27,15 @@ public:
 };
 
 class PriorityBST {
-public:
-    class Impl;   // pImpl forward declaration
 private:
-    Impl* pImpl;
+    DepartmentBST* departments[10];
+    int deptCount;
+    int findDepartment(const std::string& dept) const;
 public:
     PriorityBST();
     ~PriorityBST();
 
+    void addDepartment(const std::string& dept);
     void insert(const Patient& p, const std::string& dept);
     Patient getNextPatient(const std::string& dept);
     bool isEmpty(const std::string& dept) const;
