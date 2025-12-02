@@ -1,6 +1,6 @@
 #include "Patient.cpp"
 #include "PriorityManagement_BTS.cpp"
-#include "Circular queue.cpp"
+#include "CircularQueue.cpp"
 #include "VisitHistory.h"
 
 #include <iostream>
