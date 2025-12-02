@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Patient.cpp"
+#include "Patient.h"
 #include <string>
 
 class Data

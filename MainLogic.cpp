@@ -1,6 +1,6 @@
-#include "Patient.cpp"
-#include "PriorityManagement_BTS.cpp"
-#include "CircularQueue.cpp"
+#include "Patient.h"
+#include "PriorityManagement_BTS.h"
+#include "CircularQueue.h"
 #include "VisitHistory.h"
 
 #include <iostream>
@@ -9,9 +9,24 @@
 
 using namespace std;
 
+// Helper to trim whitespace from both ends of a string
+string trim(const string& str) {
+    size_t first = str.find_first_not_of(" \t\n\r");
+    if (string::npos == first) {
+        return "";
+    }
+    size_t last = str.find_last_not_of(" \t\n\r");
+    return str.substr(first, (last - first + 1));
+}
+
 CircularQueue currentQueue(200);
 PriorityBST currentPpriorityQueue;
 VisitHistory currentVisitHistory;
+
+void registeringNewPatient();
+void sendToDoctor();
+void getConsultationAndDiagnosis(Patient &patient);
+void displayAllWaitingPatients();
 
 void registeringNewPatient()
 {
@@ -47,8 +62,13 @@ void registeringNewPatient()
     // clearing leftover newline before getline
     cin.ignore(numeric_limits<streamsize>::max(), '\n');
 
-    cout << "Enter patient's department (e.g., Cardiology, Orthopedics, General): ";
+    cout << "Enter patient's department (Cardiology, Emergency, Pediatrics, General): ";
     std::getline(cin, department);
+    department = trim(department);
+    if (department.empty()) {
+        department = "General";
+    }
+
 
     if (severity < 6)
     {
@@ -82,7 +102,7 @@ void registeringNewPatient()
     else
     {
         Patient currentPatient = Patient(severity, name, gender, age, department);
-        currentPpriorityQueue.insert(currentPatient);
+        currentPpriorityQueue.insert(currentPatient, department);
     }
 }
 
@@ -90,8 +110,8 @@ void sendToDoctor()
 {
     string department;
     cout << "Enter department to send to doctor from (Leave empty for General): ";
-    cin.ignore(numeric_limits<streamsize>::max(), '\n');
     std::getline(cin, department);
+    department = trim(department);
 
     if (department.empty()) // if department was left empty/enter was pressed
     {
@@ -138,16 +158,15 @@ void getConsultationAndDiagnosis(Patient &patient){
     cout << "Patient's complaints: " << patient.getComplaints() << "\n";
 
     cout << "Enter doctor's name: ";
-    cin.ignore(numeric_limits<streamsize>::max(), '\n');
     std::getline(cin, doctorName);
 
     cout << "Enter diagnosis: ";
     std::getline(cin, diagnosis);
 
     cout << "Need to enter patient's blood group (0 - No | 1 - Yes): ";
-    while (!(cin >> enterBloodGroup) || enterBloodGroup < 0 || enterBloodGroup!= 1)
+    while (!(cin >> enterBloodGroup) || enterBloodGroup < 0 || enterBloodGroup > 1)
     {
-        cout << "Invalid severity. Enter an integer between 1 and 10: ";
+        cout << "Invalid choice. Pick 0 or 1: ";
         cin.clear();
         cin.ignore(numeric_limits<streamsize>::max(), '\n');
     }
@@ -187,4 +206,62 @@ void displayAllWaitingPatients(){
     } else {
         currentQueue.Display();
     }
+}
+
+// Append this to the bottom of MainLogic.cpp
+
+void showMenu() {
+
+    cout << "\n========================================\n";
+    cout << "   HOSPITAL SYSTEM  \n";
+    cout << "========================================\n";
+    cout << "1. Register New Patient\n";
+    cout << "2. Send Next Patient to Doctor\n";
+    cout << "3. View All Waiting Patients (Queue + BST)\n";
+    cout << "4. View Visit History\n";
+    cout << "5. Exit\n";
+    cout << "========================================\n";
+    cout << "Select Option: ";
+}
+
+int main() { 
+
+    currentPpriorityQueue.addDepartment("Emergency");
+    currentPpriorityQueue.addDepartment("Cardiology");
+    currentPpriorityQueue.addDepartment("Pediatrics"); 
+    currentPpriorityQueue.addDepartment("General");
+
+    int choice;
+    while (true) {
+        showMenu();
+        if (!(cin >> choice)) {
+            cout << "Invalid input. Please enter a number.\n";
+            cin.clear();
+            cin.ignore(numeric_limits<streamsize>::max(), '\n');
+            continue;
+        }
+        cin.ignore(numeric_limits<streamsize>::max(), '\n'); // Clear buffer
+
+        switch (choice) {
+        case 1:
+            registeringNewPatient();
+            break;
+        case 2:
+            sendToDoctor();
+            break;
+        case 3:
+            displayAllWaitingPatients();
+            break;
+        case 4:
+            cout << "\n=== FULL VISIT HISTORY ===\n";
+            currentVisitHistory.printHistory();
+            break;
+        case 5:
+            cout << "Shutting down system...\n";
+            return 0;
+        default:
+            cout << "Invalid option. Try again.\n";
+        }
+    }
+    return 0;
 }

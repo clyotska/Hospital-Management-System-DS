@@ -1,70 +1,59 @@
-
+#include "CircularQueue.h"
 #include <iostream>
 #include <stdexcept>
 #include <limits>
-#include "Patient.cpp";
+
 using namespace std;
 
-class CircularQueue {
-private:
-	int front, rear, capacity, size;
-	Patient* queue; ///array to store Patient class objects
+CircularQueue::CircularQueue(int cap)
+    : front(0), rear(0), capacity(cap), size(0), queue(nullptr)
+{
+    if (capacity <= 0) capacity = 1;
+    queue = new Patient[capacity];
+}
 
-public:
-	CircularQueue(int cap) { ///constructor
-		queue = nullptr;
-        capacity = cap; // maximum size of array
-        front = 0;
-        rear = 0;
-        size = 0; // number of patients in a queue
-        queue = new Patient[capacity]; // allocate storage
-	}
-	bool isFull() {
-		return (capacity == size);
-	}
+CircularQueue::~CircularQueue() {
+    delete[] queue;
+}
 
-	bool isEmpty() {
-		return (size == 0);
-	}
+bool CircularQueue::isFull() const {
+    return (size == capacity);
+}
 
-	void Enqueue(Patient p){
-		if (this->isFull()) {
-			cout << "The queue is full";
-			return;
-		}
-		rear = (front + size) % capacity;// circular behaviour
-		queue[rear] = p;
-		size++;	
-	}
+bool CircularQueue::isEmpty() const {
+    return (size == 0);
+}
 
-	Patient Dequeue() {
-		Patient dequeue;
-		if (this->isEmpty()) {
-			cout << "The queue is empty";
-			throw runtime_error("The queue is empty");
-		}
-		dequeue = queue[front];
-		front = (front + 1) % capacity; //ensuring circular behaviour
-		size--;
-		return dequeue;
+void CircularQueue::Enqueue(const Patient& p) {
+    if (isFull()) {
+        cout << "The queue is full\n";
+        return;
+    }
+    // rear points to the index where we will insert
+    rear = (front + size) % capacity;
+    queue[rear] = p;
+    ++size;
+}
 
-	}
+Patient CircularQueue::Dequeue() {
+    if (isEmpty()) {
+        cout << "The queue is empty\n";
+        throw runtime_error("The queue is empty");
+    }
+    Patient result = queue[front];
+    front = (front + 1) % capacity;
+    --size;
+    return result;
+}
 
-	void Display() {
-		if (!(this->isEmpty())) {
-			for (int i = 0; i < size; i++) {
-				cout << i + 1 << "." << queue[i].getName() <<endl;
-			}
-		
-		}
-		else {
-			cout<<"The queue is empty.";
-		}
-	
-	}
-	~CircularQueue() {
-		delete[] queue;
-	}
-
-};
+void CircularQueue::Display() const {
+    if (isEmpty()) {
+        cout << "The queue is empty.\n";
+        return;
+    }
+    for (int i = 0; i < size; ++i) {
+        int idx = (front + i) % capacity;
+        cout << (i + 1) << ". " << queue[idx].getName() << '\n';
+    }
+}
 
