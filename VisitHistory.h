@@ -3,7 +3,6 @@
 #include "Patient.cpp"
 #include <string>
 
-// Класс, хранящий запись. ТУТ ПАЦИЕНТ КАК ЗАГЛУШКА УБЕРИТЕ
 class Data
 {
 private:
@@ -54,7 +53,7 @@ private:
 public:
     LinkedList();
 
-    // Prohibiting copy/moving to avoid double deletions
+    // prohibiting copy/moving to avoid double deletions
     LinkedList(const LinkedList &) = delete;
     LinkedList &operator=(const LinkedList &) = delete;
     LinkedList(LinkedList &&) = delete;

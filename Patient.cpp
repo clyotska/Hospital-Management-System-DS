@@ -26,11 +26,12 @@ private:
     int age;
     string bloodGroup; // added bloodGroup, we can delete it tho. Idk maybe a doctor will test for bloodGroup too
     int severity;
+    string department; // department assigned to patient
     chrono::system_clock::time_point arrivalTime; // to store our system time
 
 public:
-// parametrized constructor, if diagnosis and bloodGroup aren't provided just makes them Unkown
-    Patient(int p_severity, string p_name, char p_gender, int p_age, string p_complaints = "Severe Condition", string p_bloodGroup = "Unknown", string p_diagnosis = "No Records")
+    // parametrized constructor, if diagnosis and bloodGroup aren't provided just makes them Unkown
+    Patient(int p_severity, string p_name, char p_gender, int p_age, string p_department, string p_complaints = "Severe Condition", string p_bloodGroup = "Unknown", string p_diagnosis = "No Records")
     {
         this->patientId = amountOfPatients++;
         this->severity = p_severity;
@@ -40,24 +41,26 @@ public:
         this->age = p_age;
         this->complaints = p_complaints;
         this->bloodGroup = p_bloodGroup;
+        this->department = p_department;
         this->arrivalTime = std::chrono::system_clock::now();; // sets the arrivalTime to current system time
         // this will work on both Mac and Windows (hopefully)
     }
 
-    Patient(int p_severity, char p_gender, string p_name, int p_age, string p_bloodGroup)
+    Patient(int p_severity, char p_gender, string p_name, int p_age, string p_department, string p_bloodGroup = "Unknown")
     {
         this->patientId = amountOfPatients++; this->severity = p_severity;
         this->name = p_name; this->diagnosis = "No Records"; this->gender = p_gender;
-        this->age = p_age; this->complaints = "General Health Check Up"; this->bloodGroup = p_bloodGroup;
+        this->age = p_age; this->complaints = "General Health Check Up"; this->bloodGroup = p_bloodGroup; this->department = p_department;
         this->arrivalTime = std::chrono::system_clock::now();; // sets the arrivalTime to current system time
         // this will work on both Mac and Windows (hopefully)
     }
 
-    Patient(string p_name, int p_severity, char p_gender, int p_age, string p_complaints = "Unspecified", string p_bloodGroup = "Unknown", string p_diagnosis = "No Records")
+   
+    Patient(string p_name, int p_severity, char p_gender, int p_age , string p_department, string p_complaints = "Unspecified", string p_bloodGroup = "Unknown", string p_diagnosis = "No Records")
     {
         this->patientId = amountOfPatients++; this->severity = p_severity; this->name = p_name;
         this->diagnosis = p_diagnosis; this->gender = p_gender; this->age = p_age; this->complaints = p_complaints;
-        this->bloodGroup = p_bloodGroup;
+        this->bloodGroup = p_bloodGroup; this->department = p_department;
         this->arrivalTime = std::chrono::system_clock::now();; // sets the arrivalTime to current system time
         // this will work on both Mac and Windows (hopefully)
     }
@@ -70,6 +73,7 @@ public:
         gender = '-';
         age = 0;
         bloodGroup = "Unknown";
+        department = "General";
         arrivalTime = std::chrono::system_clock::now();
     }
 
@@ -84,6 +88,7 @@ public:
     int getAge() const { return age; }
     string getBloodGroup() const { return bloodGroup; }
     string getComplaints() const { return complaints; }
+    string getDepartment() const { return department; }
     chrono::system_clock::time_point getArrivalTime() const {
         return arrivalTime;
     }
@@ -112,7 +117,8 @@ public:
         string patientInfo = "Patient ID: " + to_string(getPatientId()) + "\nPatient Name: " + getName()
         + "\nSeverity: " + to_string(getSeverity()) + 
         "\nArrival Time: " + getStringArrivalTime() + "\nGender & Age: " + getGender() + ", " + to_string(getAge())
-        + "\nComplaints: " + getComplaints() + "\nDiagnosis: " + getDiagnosis() +  "\nBlood Group: " + getBloodGroup();
+        + "\nComplaints: " + getComplaints() + "\nDepartment: " + getDepartment()
+        + "\nDiagnosis: " + getDiagnosis() +  "\nBlood Group: " + getBloodGroup();
         return patientInfo;
     }
 };
