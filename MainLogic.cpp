@@ -1,6 +1,6 @@
-#include "Patient.cpp"
-#include "PriorityManagement_BTS.cpp"
-#include "CircularQueue.cpp"
+#include "Patient.h"
+#include "PriorityManagement_BTS.h"
+#include "CircularQueue.h"
 #include "VisitHistory.h"
 
 #include <iostream>
@@ -12,6 +12,11 @@ using namespace std;
 CircularQueue currentQueue(200);
 PriorityBST currentPpriorityQueue;
 VisitHistory currentVisitHistory;
+
+void registeringNewPatient();
+void sendToDoctor();
+void getConsultationAndDiagnosis(Patient &patient);
+void displayAllWaitingPatients();
 
 void registeringNewPatient()
 {
@@ -82,7 +87,7 @@ void registeringNewPatient()
     else
     {
         Patient currentPatient = Patient(severity, name, gender, age, department);
-        currentPpriorityQueue.insert(currentPatient);
+        currentPpriorityQueue.insert(currentPatient, department);
     }
 }
 
@@ -187,4 +192,58 @@ void displayAllWaitingPatients(){
     } else {
         currentQueue.Display();
     }
+}
+
+// Append this to the bottom of MainLogic.cpp
+
+void showMenu() {
+    cout << "\n========================================\n";
+    cout << "   HOSPITAL TRIAGE SYSTEM (INHA v1.0)   \n";
+    cout << "========================================\n";
+    cout << "1. Register New Patient\n";
+    cout << "2. Send Next Patient to Doctor\n";
+    cout << "3. View All Waiting Patients (Queue + BST)\n";
+    cout << "4. View Visit History\n";
+    cout << "5. Exit\n";
+    cout << "========================================\n";
+    cout << "Select Option: ";
+}
+
+int main() {
+    // Initialize static member (Essential fix if not done globally)
+    // Patient::amountOfPatients = 0; 
+
+    int choice;
+    while (true) {
+        showMenu();
+        if (!(cin >> choice)) {
+            cout << "Invalid input. Please enter a number.\n";
+            cin.clear();
+            cin.ignore(numeric_limits<streamsize>::max(), '\n');
+            continue;
+        }
+        cin.ignore(numeric_limits<streamsize>::max(), '\n'); // Clear buffer
+
+        switch (choice) {
+        case 1:
+            registeringNewPatient();
+            break;
+        case 2:
+            sendToDoctor();
+            break;
+        case 3:
+            displayAllWaitingPatients();
+            break;
+        case 4:
+            cout << "\n=== FULL VISIT HISTORY ===\n";
+            currentVisitHistory.printHistory();
+            break;
+        case 5:
+            cout << "Shutting down system...\n";
+            return 0;
+        default:
+            cout << "Invalid option. Try again.\n";
+        }
+    }
+    return 0;
 }
