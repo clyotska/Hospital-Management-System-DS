@@ -1,5 +1,6 @@
 
 #include <iostream>
+#include <stdexcept>
 #include "Patient.cpp";
 using namespace std;
 
@@ -38,7 +39,7 @@ public:
 		Patient dequeue;
 		if (this->isEmpty()) {
 			cout << "The queue is empty";
-			return -1;
+			throw runtime_error("The queue is empty");
 		}
 		dequeue = queue[front];
 		front = (front + 1) % capacity; //ensuring circular behaviour
@@ -50,17 +51,17 @@ public:
 	void Display() {
 		if (!(this->isEmpty())) {
 			for (int i = 0; i < size; i++) {
-				cout << i + 1 << "." << queue[i].getName() << " " << queue[i].getSurname()<<endl;
+				cout << i + 1 << "." << queue[i].getName() <<endl;
 			}
 		
 		}
 		else {
-			cout<<"The queue is empty."
+			cout<<"The queue is empty.";
 		}
 	
 	}
 	~CircularQueue() {
-		delete queue[];
+		delete[] queue;
 	}
 
 };

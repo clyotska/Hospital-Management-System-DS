@@ -40,6 +40,18 @@ public:
         this->arrivalTime = std::chrono::system_clock::now();; // sets the arrivalTime to current system time
         // this will work on both Mac and Windows (hopefully)
     }
+
+    Patient(){
+        patientId = 0;
+        severity = 0;
+        name = "Unknown";
+        disease = "Unknown";
+        gender = "Unknown";
+        age = 0;
+        bloodGroup = "Unknown";
+        arrivalTime = std::chrono::system_clock::now();
+    }
+
     ~Patient() {}
 
     // getters
