@@ -1,6 +1,7 @@
 
 #include <iostream>
 #include <stdexcept>
+#include <limits>
 #include "Patient.cpp";
 using namespace std;
 
@@ -11,11 +12,12 @@ private:
 
 public:
 	CircularQueue(int cap) { ///constructor
-		queue = new Patient[cap];
-		capacity = cap; // maximum size of array
-		front = 0;
-		rear = 0;
-		size = 0; // number of patients in a queue
+		queue = nullptr;
+        capacity = cap; // maximum size of array
+        front = 0;
+        rear = 0;
+        size = 0; // number of patients in a queue
+        queue = new Patient[capacity]; // allocate storage
 	}
 	bool isFull() {
 		return (capacity == size);

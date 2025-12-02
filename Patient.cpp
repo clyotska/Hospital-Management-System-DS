@@ -18,24 +18,45 @@ class Patient
 
 private:
     int patientId;
+    static int amountOfPatients;
     string name;
-    string disease;
-    string gender;
+    string diagnosis;
+    string complaints;
+    char gender;
     int age;
     string bloodGroup; // added bloodGroup, we can delete it tho. Idk maybe a doctor will test for bloodGroup too
     int severity;
     chrono::system_clock::time_point arrivalTime; // to store our system time
 
 public:
-// parametrized constructor, if disease and bloodGroup aren't provided just makes them Unkown
-    Patient(int p_patientId, int p_severity, string p_name, string p_gender, int p_age, string p_disease = "No Records", string p_bloodGroup = "Unknown")
+// parametrized constructor, if diagnosis and bloodGroup aren't provided just makes them Unkown
+    Patient(int p_severity, string p_name, char p_gender, int p_age, string p_complaints = "Severe Condition", string p_bloodGroup = "Unknown", string p_diagnosis = "No Records")
     {
-        this->patientId = p_patientId;
+        this->patientId = amountOfPatients++;
         this->severity = p_severity;
         this->name = p_name;
-        this->disease = p_disease;
+        this->diagnosis = p_diagnosis;
         this->gender = p_gender;
         this->age = p_age;
+        this->complaints = p_complaints;
+        this->bloodGroup = p_bloodGroup;
+        this->arrivalTime = std::chrono::system_clock::now();; // sets the arrivalTime to current system time
+        // this will work on both Mac and Windows (hopefully)
+    }
+
+    Patient(int p_severity, char p_gender, string p_name, int p_age, string p_bloodGroup)
+    {
+        this->patientId = amountOfPatients++; this->severity = p_severity;
+        this->name = p_name; this->diagnosis = "No Records"; this->gender = p_gender;
+        this->age = p_age; this->complaints = "General Health Check Up"; this->bloodGroup = p_bloodGroup;
+        this->arrivalTime = std::chrono::system_clock::now();; // sets the arrivalTime to current system time
+        // this will work on both Mac and Windows (hopefully)
+    }
+
+    Patient(string p_name, int p_severity, char p_gender, int p_age, string p_complaints = "Unspecified", string p_bloodGroup = "Unknown", string p_diagnosis = "No Records")
+    {
+        this->patientId = amountOfPatients++; this->severity = p_severity; this->name = p_name;
+        this->diagnosis = p_diagnosis; this->gender = p_gender; this->age = p_age; this->complaints = p_complaints;
         this->bloodGroup = p_bloodGroup;
         this->arrivalTime = std::chrono::system_clock::now();; // sets the arrivalTime to current system time
         // this will work on both Mac and Windows (hopefully)
@@ -45,8 +66,8 @@ public:
         patientId = 0;
         severity = 0;
         name = "Unknown";
-        disease = "Unknown";
-        gender = "Unknown";
+        diagnosis = "Unknown";
+        gender = '-';
         age = 0;
         bloodGroup = "Unknown";
         arrivalTime = std::chrono::system_clock::now();
@@ -58,10 +79,11 @@ public:
     int getPatientId() const { return patientId; }
     string getName() const { return name; }
     int getSeverity() const { return severity; }
-    string getDisease() const { return disease; }
-    string getGender() const { return gender; }
+    string getDiagnosis() const { return diagnosis; }
+    char getGender() const { return gender; }
     int getAge() const { return age; }
     string getBloodGroup() const { return bloodGroup; }
+    string getComplaints() const { return complaints; }
     chrono::system_clock::time_point getArrivalTime() const {
         return arrivalTime;
     }
@@ -83,11 +105,14 @@ public:
         return string(buffer);
     }
 
-    // a setter, use it in historyNode to set the disease
-    void setDisease(string p_disease) { this->disease = p_disease; }
+    // a setter, use it in historyNode to set the diagnosis
+    void setDiagnosis(string p_diagnosis) { this->diagnosis = p_diagnosis; }
 
     string info() const {
-        string patientInfo = "Patient ID: " + to_string(getPatientId()) + "\nPatient Name: " + getName() + "\nSeverity: " + to_string(getSeverity()) + "\nArrival Time: " + getStringArrivalTime() + "\nGender & Age: " + getGender() + ", " + to_string(getAge()) + "\nDisease: " + getDisease() +  "\nBlood Group: " + getBloodGroup();
+        string patientInfo = "Patient ID: " + to_string(getPatientId()) + "\nPatient Name: " + getName()
+        + "\nSeverity: " + to_string(getSeverity()) + 
+        "\nArrival Time: " + getStringArrivalTime() + "\nGender & Age: " + getGender() + ", " + to_string(getAge())
+        + "\nComplaints: " + getComplaints() + "\nDiagnosis: " + getDiagnosis() +  "\nBlood Group: " + getBloodGroup();
         return patientInfo;
     }
 };
