@@ -181,6 +181,7 @@ void getConsultationAndDiagnosis(Patient &patient){ // defining the function for
     {
         cout << "Enter patient's blood group: "; // prompting for the blood group
         std::getline(cin, bloodGroup); // getting the blood group
+        patient.setBloodGroup(bloodGroup); // setting the bloodGroup for the patient
         patient.setDiagnosis(diagnosis); // setting the diagnosis for the patient
     }
     else // if the user does not want to enter the blood group
